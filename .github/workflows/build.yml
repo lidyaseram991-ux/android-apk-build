@@ -13,8 +13,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Unzip Project Files
+    - name: Clean Old Build Files & Unzip Project
       run: |
+        # تنظيف المجلدات التراكمية من البناء السابق لضمان تحديث الكود
+        rm -rf app/build gradle/ .gradle/
         unzip -o project.zip
         if [ -d "super-status-bar" ]; then cp -rn super-status-bar/* . 2>/dev/null || true; fi
 
@@ -33,11 +35,11 @@ jobs:
 
     - name: Build Debug APK via Gradle
       run: |
-        gradle assembleDebug --warning-mode none
+        gradle assembleDebug --no-build-cache --warning-mode none
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: app-debug
+        name: app-debug-v2
         path: '**/build/outputs/apk/debug/*.apk'
         
