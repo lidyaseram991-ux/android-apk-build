@@ -15,8 +15,8 @@ jobs:
 
     - name: Clean Old Build Files & Unzip Project
       run: |
-        # تنظيف المجلدات التراكمية من البناء السابق لضمان تحديث الكود
-        rm -rf app/build gradle/ .gradle/
+        # حذف مخلفات التجميع السابقة بالكامل
+        rm -rf app/build gradle/ .gradle/ build/
         unzip -o project.zip
         if [ -d "super-status-bar" ]; then cp -rn super-status-bar/* . 2>/dev/null || true; fi
 
@@ -35,11 +35,11 @@ jobs:
 
     - name: Build Debug APK via Gradle
       run: |
-        gradle assembleDebug --no-build-cache --warning-mode none
+        gradle assembleDebug --no-build-cache --rerun-tasks --warning-mode none
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: app-debug-v2
+        name: app-debug-v3
         path: '**/build/outputs/apk/debug/*.apk'
         
